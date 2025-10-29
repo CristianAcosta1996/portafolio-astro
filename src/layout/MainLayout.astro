@@ -1,0 +1,30 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { NavBar } from "../components";
+import '../styles/global.css';
+
+interface Props {
+  pageTitle: string;
+  showNav?: boolean;
+}
+
+const {pageTitle, showNav = true} = Astro.props;
+---
+
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle}</title>
+	</head>
+	<body class="bg-slate-900 text-slate-100">
+        {
+            showNav && <NavBar />
+        }
+		<slot/>
+        <ClientRouter />
+	</body>
+</html>
