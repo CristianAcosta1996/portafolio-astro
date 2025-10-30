@@ -7,6 +7,7 @@
 - 💻 **Desarrollador** con experiencia en construcción de aplicaciones usando javascript y java.
 - 🎯 Apasionado por resolver problemas y crear soluciones innovadoras.
 - 📚 Siempre aprendiendo algo nuevo en el mundo de la tecnología.
+- 🌍 Resido Actualmente en Uruguay 🇺🇾
 
 ## 🛠️ Tecnologías y Herramientas
 
