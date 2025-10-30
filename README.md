@@ -12,7 +12,7 @@
 
 - Lenguajes: Typescript, JavaScript, Java
 - Frameworks y librerias: React, NestJS, Astro
-- Herramientas: Docker, Git, Vite
+- Herramientas: Docker, Git, Vite, Jenkins
 
 ## 📫 Contáctame
 
