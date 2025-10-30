@@ -22,4 +22,4 @@
 
 ---
 
-¡Gracias por visitar mi portfolio!! Espero que encuentres algo interesante aquí. 😊
+¡Gracias por visitar mi portfolio! Espero que encuentres algo interesante aquí. 😊
