@@ -10,9 +10,9 @@
 
 ## 🛠️ Tecnologías y Herramientas
 
-- Lenguajes: Typescript, JavaScript, Java
-- Frameworks y librerias: React, NestJS, Astro
-- Herramientas: Docker, Git, Vite, Jenkins
+- Lenguajes: Typescript, JavaScript, Java.
+- Frameworks y librerias: React, NestJS, Astro.
+- Herramientas: Docker, Git, Vite, Jenkins.
 
 ## 📫 Contáctame
 
