@@ -13,6 +13,19 @@ pipeline {
     }
 
     stages {
+        stage('Pre-fix permissions') {
+            steps {
+                echo '🔧 Corrigiendo permisos previos en el workspace...'
+                // Asegura que archivos previos creados por root sean reasignados al usuario de Jenkins
+                sh """
+                    docker run --rm \
+                        -v \$(pwd):/app \
+                        -w /app \
+                        alpine \
+                        sh -c 'chown -R \$(id -u):\$(id -g) /app || true'
+                """
+            }
+        }
         stage('Checkout') {
             steps {
                 echo '🌀 Clonando repositorio...'
@@ -28,6 +41,8 @@ pipeline {
                     sh """
                         docker run --rm \
                             --user \$(id -u):\$(id -g) \
+                            -e HOME=/tmp \
+                            -e ASTRO_TELEMETRY_DISABLED=1 \
                             -v \$(pwd):/app \
                             -w /app \
                             node:20-alpine \
@@ -76,7 +91,14 @@ pipeline {
         }
         always {
             echo '🧹 Limpiando archivos temporales...'
-            sh 'rm -rf node_modules dist .astro || true'
+            // Limpiar usando un contenedor con root para evitar problemas de permisos
+            sh """
+                docker run --rm \
+                    -v \$(pwd):/app \
+                    -w /app \
+                    alpine \
+                    sh -c 'rm -rf node_modules dist .astro || true'
+            """
         }
     }
 }
