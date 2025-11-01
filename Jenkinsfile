@@ -20,6 +20,15 @@ pipeline {
                 sh 'docker build -t astro-app .'
             }
         }
+
+        stage('Debug Netlify vars') {
+            steps {
+                sh '''
+                        echo "TOKEN (parcial): ${NETLIFY_TOKEN:0:5}****"
+                        echo "SITE ID: $NETLIFY_SITE_ID"
+                    '''
+                }
+        }
         
         stage('Desplegar en Netlify') {
             steps {
