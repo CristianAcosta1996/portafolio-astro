@@ -35,60 +35,60 @@
         border-radius: 10px;
     }
 
-    /* Bordes superiores izquierda */
-    .marco-frame::before {
+    /* Estilos base para todos los bordes */
+    .marco-frame::before,
+    .marco-frame::after,
+    .marco-outer::before,
+    .marco-outer::after {
         content: '';
         position: absolute;
-        top: -20px;
-        left: -20px;
         width: 70px;
         height: 70px;
         border: 4px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Animaciones de los bordes - Comentar este bloque para desactivar */
+    .marco-frame::before,
+    .marco-frame::after {
+        animation: fadeInOutBorders 8s ease-in-out infinite;
+    }
+
+    .marco-outer::before,
+    .marco-outer::after {
+        animation: fadeInOutBordersInverse 8s ease-in-out infinite;
+    }
+    /* Fin animaciones de bordes */
+
+    /* Bordes superiores izquierda */
+    .marco-frame::before {
+        top: -20px;
+        left: -20px;
         border-right: none;
         border-bottom: none;
-        animation: fadeInOutBorders 8s ease-in-out infinite;
     }
 
     /* Bordes inferiores derecha */
     .marco-frame::after {
-        content: '';
-        position: absolute;
         bottom: -20px; 
         right: -20px;
-        width: 70px;
-        height: 70px;
-        border: 4px solid rgba(255, 255, 255, 0.5);
         border-left: none;
         border-top: none;
-        animation: fadeInOutBorders 8s ease-in-out infinite;
     }
 
     /* Bordes superiores derecha */
     .marco-outer::before {
-        content: '';
-        position: absolute;
         top: -20px;
         right: -20px;
-        width: 70px;
-        height: 70px;
-        border: 4px solid rgba(255, 255, 255, 0.5);
         border-left: none;
         border-bottom: none;
-        animation: fadeInOutBordersInverse 8s ease-in-out infinite;
     }
 
     /* Bordes inferiores izquierda */
     .marco-outer::after {
-        content: '';
-        position: absolute;
         bottom: -20px;
         left: -20px;
-        width: 70px;
-        height: 70px;
-        border: 4px solid rgba(255, 255, 255, 0.5);
         border-right: none;
         border-top: none;
-        animation: fadeInOutBordersInverse 8s ease-in-out infinite;
     }
 
     /* Animación 3D del marco completo */
