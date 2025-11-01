@@ -33,17 +33,15 @@ pipeline {
 
         
         stage('Desplegar en Netlify') {
-            steps {
-                echo '🌐 Desplegando en Netlify...'
+             steps {
                 sh '''
-                    npm install netlify-cli
-                    npx netlify deploy --dir=dist --prod \
-                    --auth=$NETLIFY_AUTH_TOKEN \
-                    --site=$NETLIFY_SITE_ID
-                  '''
+                    echo "🚀 Iniciando despliegue en Netlify..."
+                    npm install -g netlify-cli
+                    npx netlify deploy --dir=dist --prod --auth=$NETLIFY_TOKEN --site=$NETLIFY_SITE_ID
+                '''
             }
         }
-    }
+
 
     post {
         success {
