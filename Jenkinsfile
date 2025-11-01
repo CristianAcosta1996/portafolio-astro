@@ -27,6 +27,7 @@ pipeline {
                     // Montar workspace como volumen, build se escribe directamente
                     sh """
                         docker run --rm \
+                            --user \$(id -u):\$(id -g) \
                             -v \$(pwd):/app \
                             -w /app \
                             node:20-alpine \
@@ -57,6 +58,7 @@ pipeline {
                 sh '''
                     npx netlify-cli deploy \
                         --prod \
+                        --skip-build \
                         --dir=dist \
                         --auth=$NETLIFY_TOKEN \
                         --site=$NETLIFY_SITE_ID
