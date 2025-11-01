@@ -18,4 +18,4 @@ COPY . .
 RUN yarn build
 
 # Deploy on container start (Jenkins passes NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID)
-CMD ["sh", "-lc", "netlify deploy --prod --dir=dist --auth=\"$NETLIFY_AUTH_TOKEN\" --site=\"$NETLIFY_SITE_ID\" --skip-build"]
+CMD ["sh", "-lc", "netlify deploy --prod --dir=dist --auth=\"$NETLIFY_AUTH_TOKEN\" --site=\"$NETLIFY_SITE_ID\""]
