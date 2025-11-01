@@ -24,11 +24,13 @@ pipeline {
         stage('Debug Netlify vars') {
             steps {
                 sh '''
-                        echo "TOKEN (parcial): ${NETLIFY_TOKEN:0:5}****"
-                        echo "SITE ID: $NETLIFY_SITE_ID"
+                    #!/bin/bash
+                    echo "TOKEN (parcial): ${NETLIFY_TOKEN:0:5}****"
+                    echo "SITE ID: $NETLIFY_SITE_ID"
                     '''
-                }
+            }
         }
+
         
         stage('Desplegar en Netlify') {
             steps {
