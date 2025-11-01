@@ -1,0 +1,21 @@
+# Simple image: build Astro and deploy to Netlify in one container
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Enable Yarn 1 and install Netlify CLI
+RUN corepack enable \
+ && corepack prepare yarn@1.22.22 --activate \
+ && npm i -g netlify-cli@17 \
+ && npm cache clean --force
+
+# Install dependencies first (better caching)
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+# Copy source and build
+COPY . .
+RUN yarn build
+
+# Deploy on container start (Jenkins passes NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID)
+CMD ["sh", "-lc", "netlify deploy --prod --dir=dist --auth=\"$NETLIFY_AUTH_TOKEN\" --site=\"$NETLIFY_SITE_ID\" --skip-build"]

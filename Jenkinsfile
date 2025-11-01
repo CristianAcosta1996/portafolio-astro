@@ -1,15 +1,11 @@
 // ============================================================
-// Jenkinsfile - Opción 3: Docker con Volumen (Netlify)
+// Jenkinsfile - Netlify deployment using Dockerfile.netlify
 // Requiere: Docker instalado en el agente Jenkins
-// Flujo: docker run (monta workspace) -> genera dist/ -> netlify deploy
+// Flujo: Build image (yarn build inside) -> Run container (netlify deploy inside)
 // ============================================================
 
 pipeline {
     agent any
-    options {
-        // Evita el checkout automático al inicio, así podemos arreglar permisos primero
-        skipDefaultCheckout(true)
-    }
 
     environment {
         NETLIFY_TOKEN = credentials('NETLIFY_TOKEN')
@@ -17,69 +13,22 @@ pipeline {
     }
 
     stages {
-        stage('Pre-fix permissions') {
+        stage('Build image') {
             steps {
-                echo '🔧 Corrigiendo permisos previos en el workspace...'
-                // Asegura que archivos previos creados por root sean reasignados al usuario de Jenkins y .git sea escribible
-                sh """
-                    docker run --rm \
-                        -v \$(pwd):/app \
-                        -w /app \
-                        alpine \
-                        sh -c 'chown -R \$(id -u):\$(id -g) /app >/dev/null 2>&1 || true; chmod -R a+rwX .git >/dev/null 2>&1 || true'
-                """
-            }
-        }
-
-        stage('Checkout') {
-            steps {
-                echo '🌀 Clonando repositorio...'
-                checkout scm
-            }
-        }
-
-        stage('Build with Docker (mounted volume)') {
-            steps {
-                echo '🐳 Construyendo proyecto con Docker...'
-                sh """
-                    docker run --rm \
-                        --user \$(id -u):\$(id -g) \
-                        -e HOME=/tmp \
-                        -e ASTRO_TELEMETRY_DISABLED=1 \
-                        -v \$(pwd):/app \
-                        -w /app \
-                        node:20-alpine \
-                        sh -c 'yarn install --frozen-lockfile && yarn build'
-                """
-            }
-        }
-
-        stage('Verify dist') {
-            steps {
-                echo '🔍 Verificando que dist/ existe...'
-                sh '''
-                    if [ -d "dist" ]; then
-                        echo "✅ Carpeta dist/ generada correctamente"
-                        ls -lah dist/
-                    else
-                        echo "❌ ERROR: dist/ no existe"
-                        exit 1
-                    fi
-                '''
+                echo '🧱 Construyendo imagen (incluye yarn build)...'
+                sh 'docker build -f Dockerfile.netlify -t mi-portfolio:netlify .'
             }
         }
 
         stage('Deploy to Netlify') {
             steps {
-                echo '🚀 Desplegando a Netlify...'
-                sh '''
-                    npx netlify-cli deploy \
-                        --prod \
-                        --skip-build \
-                        --dir=dist \
-                        --auth=$NETLIFY_TOKEN \
-                        --site=$NETLIFY_SITE_ID
-                '''
+                echo '🚀 Desplegando a Netlify desde el contenedor...'
+                sh """
+                    docker run --rm \
+                        -e NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN \
+                        -e NETLIFY_SITE_ID=$NETLIFY_SITE_ID \
+                        mi-portfolio:netlify
+                """
             }
         }
     }
@@ -90,17 +39,6 @@ pipeline {
         }
         failure {
             echo '❌ Error durante el pipeline'
-        }
-        always {
-            echo '🧹 Limpiando archivos temporales...'
-            // Limpiar usando un contenedor con root para evitar problemas de permisos
-            sh """
-                docker run --rm \
-                    -v \$(pwd):/app \
-                    -w /app \
-                    alpine \
-                    sh -c 'rm -rf node_modules dist .astro || true'
-            """
         }
     }
 }
