@@ -2,6 +2,8 @@
 import { NavBar } from '../components';
 import HeroSection from '../layout/HeroSection.astro';
 import MainLayout from '../layout/MainLayout.astro';
+import ProjectsSection from '../layout/ProjectsSection.astro';
+import Footer from '../layout/Footer.astro';
 
 const myName = 'Cristian Andres Acosta Techera';
 const pageTitle = 'Mi portafolio';
@@ -9,5 +11,16 @@ const pageTitle = 'Mi portafolio';
 
 <MainLayout pageTitle={pageTitle}>
 	<HeroSection/>
-	<h1>{myName}</h1>
+	<ProjectsSection projects={[
+		{alt: "projecto test", description: 'description project test', id: '1',image: 'https://picsum.photos/400/300',technologies: ['HTML', 'CSS', 'JavaScript'],title: 'Título del proyecto', demoUrl: 'https://example.com/demo', repoUrl: 'https://github.com/example/repo'},
+		{alt: "proyecto ecommerce", description: 'Tienda online completa con carrito de compras', id: '2',image: 'https://picsum.photos/400/301',technologies: ['React', 'Node.js', 'MongoDB'],title: 'E-commerce App', demoUrl: 'https://example.com/ecommerce', repoUrl: 'https://github.com/example/ecommerce'},
+		{alt: "app de tareas", description: 'Aplicación para gestionar tareas diarias', id: '3',image: 'https://picsum.photos/400/302',technologies: ['Vue.js', 'Firebase', 'Tailwind CSS'],title: 'Task Manager', demoUrl: 'https://example.com/tasks', repoUrl: 'https://github.com/example/tasks'},
+		{alt: "blog personal", description: 'Blog con sistema de comentarios y categorías', id: '4',image: 'https://picsum.photos/400/303',technologies: ['Astro', 'Markdown', 'CSS'],title: 'Personal Blog', demoUrl: 'https://example.com/blog', repoUrl: 'https://github.com/example/blog'},
+		{alt: "dashboard analytics", description: 'Panel de control con gráficos y estadísticas', id: '5',image: 'https://picsum.photos/400/304',technologies: ['Angular', 'Chart.js', 'TypeScript'],title: 'Analytics Dashboard', demoUrl: 'https://example.com/dashboard', repoUrl: 'https://github.com/example/dashboard'},
+		{alt: "api rest", description: 'API RESTful para gestión de usuarios', id: '6',image: 'https://picsum.photos/400/305',technologies: ['Express.js', 'PostgreSQL', 'JWT'],title: 'REST API', demoUrl: 'https://example.com/api', repoUrl: 'https://github.com/example/api'},
+		{alt: "app móvil", description: 'Aplicación móvil multiplataforma', id: '7',image: 'https://picsum.photos/400/306',technologies: ['React Native', 'Expo', 'Redux'],title: 'Mobile App', demoUrl: 'https://example.com/mobile', repoUrl: 'https://github.com/example/mobile'},
+		{alt: "juego web", description: 'Juego interactivo desarrollado en JavaScript', id: '8',image: 'https://picsum.photos/400/307',technologies: ['JavaScript', 'Canvas API', 'WebGL'],title: 'Web Game', demoUrl: 'https://example.com/game', repoUrl: 'https://github.com/example/game'},
+		{alt: "landing page", description: 'Página de aterrizaje responsive y moderna', id: '9',image: 'https://picsum.photos/400/308',technologies: ['HTML', 'SCSS', 'Vanilla JS'],title: 'Landing Page', demoUrl: 'https://example.com/landing', repoUrl: 'https://github.com/example/landing'}
+	]} />
+	<Footer />
 </MainLayout>
