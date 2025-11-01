@@ -16,39 +16,30 @@ pipeline {
         stage('Pre-fix permissions') {
             steps {
                 echo '🔧 Corrigiendo permisos previos en el workspace...'
-                // Asegura que archivos previos creados por root sean reasignados al usuario de Jenkins
+                // Asegura que archivos previos creados por root sean reasignados al usuario de Jenkins y .git sea escribible
                 sh """
                     docker run --rm \
                         -v \$(pwd):/app \
                         -w /app \
                         alpine \
-                        sh -c 'chown -R \$(id -u):\$(id -g) /app || true'
+                        sh -c 'chown -R \$(id -u):\$(id -g) /app && chmod -R a+rwX .git || true'
                 """
-            }
-        }
-        stage('Checkout') {
-            steps {
-                echo '🌀 Clonando repositorio...'
-                checkout scm
             }
         }
 
         stage('Build with Docker (mounted volume)') {
             steps {
                 echo '🐳 Construyendo proyecto con Docker...'
-                script {
-                    // Montar workspace como volumen, build se escribe directamente
-                    sh """
-                        docker run --rm \
-                            --user \$(id -u):\$(id -g) \
-                            -e HOME=/tmp \
-                            -e ASTRO_TELEMETRY_DISABLED=1 \
-                            -v \$(pwd):/app \
-                            -w /app \
-                            node:20-alpine \
-                            sh -c 'yarn install --frozen-lockfile && yarn build'
-                    """
-                }
+                sh """
+                    docker run --rm \
+                        --user \$(id -u):\$(id -g) \
+                        -e HOME=/tmp \
+                        -e ASTRO_TELEMETRY_DISABLED=1 \
+                        -v \$(pwd):/app \
+                        -w /app \
+                        node:20-alpine \
+                        sh -c 'yarn install --frozen-lockfile && yarn build'
+                """
             }
         }
 
@@ -83,8 +74,12 @@ pipeline {
     }
 
     post {
-        // Nota: Jenkins ya hace un 'Declarative: Checkout SCM' antes de los stages.
-        // Evitamos un segundo checkout para prevenir conflictos de permisos/locks.
+        success {
+            echo '✅ ¡Despliegue exitoso en Netlify!'
+        }
+        failure {
+            echo '❌ Error durante el pipeline'
+        }
         always {
             echo '🧹 Limpiando archivos temporales...'
             // Limpiar usando un contenedor con root para evitar problemas de permisos
@@ -94,7 +89,7 @@ pipeline {
                     -w /app \
                     alpine \
                     sh -c 'rm -rf node_modules dist .astro || true'
-                        sh -c 'chown -R \$(id -u):\$(id -g) /app && chmod -R a+rwX .git || true'
+            """
         }
     }
 }
