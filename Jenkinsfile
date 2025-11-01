@@ -83,12 +83,8 @@ pipeline {
     }
 
     post {
-        success {
-            echo '✅ ¡Despliegue exitoso en Netlify!'
-        }
-        failure {
-            echo '❌ Error durante el pipeline'
-        }
+        // Nota: Jenkins ya hace un 'Declarative: Checkout SCM' antes de los stages.
+        // Evitamos un segundo checkout para prevenir conflictos de permisos/locks.
         always {
             echo '🧹 Limpiando archivos temporales...'
             // Limpiar usando un contenedor con root para evitar problemas de permisos
@@ -98,7 +94,7 @@ pipeline {
                     -w /app \
                     alpine \
                     sh -c 'rm -rf node_modules dist .astro || true'
-            """
+                        sh -c 'chown -R \$(id -u):\$(id -g) /app && chmod -R a+rwX .git || true'
         }
     }
 }
