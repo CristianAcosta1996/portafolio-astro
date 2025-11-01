@@ -6,6 +6,10 @@
 
 pipeline {
     agent any
+    options {
+        // Evita el checkout automático al inicio, así podemos arreglar permisos primero
+        skipDefaultCheckout(true)
+    }
 
     environment {
         NETLIFY_TOKEN = credentials('NETLIFY_TOKEN')
@@ -22,8 +26,15 @@ pipeline {
                         -v \$(pwd):/app \
                         -w /app \
                         alpine \
-                        sh -c 'chown -R \$(id -u):\$(id -g) /app && chmod -R a+rwX .git || true'
+                        sh -c 'chown -R \$(id -u):\$(id -g) /app >/dev/null 2>&1 || true; chmod -R a+rwX .git >/dev/null 2>&1 || true'
                 """
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                echo '🌀 Clonando repositorio...'
+                checkout scm
             }
         }
 
