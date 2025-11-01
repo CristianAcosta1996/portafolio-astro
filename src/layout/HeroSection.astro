@@ -1,51 +1,156 @@
 <div class="text-center h-[85vh] flex items-center justify-center">
-    <div class="inline-block marco-frame">
-        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-            Transformo ideas en soluciones de software!
-        </h1>
-        <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-            Hola, soy <span class="font-bold">Cristian Acosta.</span> 
-        </p>
-        <p class="mb-6 text-lg font-bold text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-            Soy Ingeniero Informático y Desarrollador Full Stack. Bienvenido a mi portafolio personal.
-        </p>
-        <a href="#" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-            Ver proyectos
-            <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-            </svg>
-        </a>
+    <div class="marco-outer">
+        <div class="inline-block marco-frame">
+            <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+                Transformo ideas en soluciones de software
+            </h1>
+            <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+                Hola, soy <span class="font-bold">Cristian Acosta.</span> 
+            </p>
+            <p class="mb-6 text-lg font-bold text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+                Soy Ingeniero Informático y Desarrollador Full Stack. Bienvenido a mi portafolio personal.
+            </p>
+            <a href="#" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                Ver proyectos
+                <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
+        </div>
     </div>
 </div>
 
 
 <style>
+    .marco-outer {
+        position: relative;
+        display: inline-block;
+        transform-style: preserve-3d;
+        animation: rotate3DFrame 12s ease-in-out infinite;
+    }
+
     .marco-frame {
         position: relative;
         padding: 20px;
         border-radius: 10px;
     }
 
-    .marco-frame::before,
-    .marco-frame::after {
+    /* Bordes superiores izquierda */
+    .marco-frame::before {
         content: '';
         position: absolute;
+        top: -20px;
+        left: -20px;
         width: 70px;
         height: 70px;
         border: 4px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .marco-frame::before {
-        top: -20px;
-        left: -20px;
         border-right: none;
         border-bottom: none;
-        }
+        animation: fadeInOutBorders 8s ease-in-out infinite;
+    }
 
-        .marco-frame::after {
+    /* Bordes inferiores derecha */
+    .marco-frame::after {
+        content: '';
+        position: absolute;
         bottom: -20px; 
         right: -20px;
+        width: 70px;
+        height: 70px;
+        border: 4px solid rgba(255, 255, 255, 0.5);
         border-left: none;
         border-top: none;
+        animation: fadeInOutBorders 8s ease-in-out infinite;
+    }
+
+    /* Bordes superiores derecha */
+    .marco-outer::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 70px;
+        height: 70px;
+        border: 4px solid rgba(255, 255, 255, 0.5);
+        border-left: none;
+        border-bottom: none;
+        animation: fadeInOutBordersInverse 8s ease-in-out infinite;
+    }
+
+    /* Bordes inferiores izquierda */
+    .marco-outer::after {
+        content: '';
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        width: 70px;
+        height: 70px;
+        border: 4px solid rgba(255, 255, 255, 0.5);
+        border-right: none;
+        border-top: none;
+        animation: fadeInOutBordersInverse 8s ease-in-out infinite;
+    }
+
+    /* Animación 3D del marco completo */
+    @keyframes rotate3DFrame {
+        0%, 100% {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+        }
+        25% {
+            transform: perspective(1000px) rotateX(3deg) rotateY(-3deg);
+        }
+        50% {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+        }
+        75% {
+            transform: perspective(1000px) rotateX(-3deg) rotateY(3deg);
+        }
+    }
+
+    /* Animación de fade para los bordes */
+    @keyframes fadeInOutBorders {
+        0%{
+            opacity: 0;
+        }
+        25% {
+            opacity: 0;
+        }
+        50%{
+            opacity: 1;
+        }
+        75% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* Animación contraria de fade para los bordes */
+    @keyframes fadeInOutBordersInverse {
+        0%{
+            opacity: 1;
+        }
+        25% {
+            opacity: 0;
+        }
+        50%{
+            opacity: 0;
+        }
+        75% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Efecto hover para interactividad */
+    .marco-outer:hover .marco-frame::before,
+    .marco-outer:hover .marco-frame::after,
+    .marco-outer:hover::before,
+    .marco-outer:hover::after {
+        border-color: rgba(29, 78, 216, 0.8);
+        filter: drop-shadow(0 0 20px rgba(29, 78, 216, 0.8));
     }
 </style>
