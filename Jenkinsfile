@@ -1,3 +1,9 @@
+// ============================================================
+// Jenkinsfile - Opción 3: Docker con Volumen (Netlify)
+// Requiere: Docker instalado en el agente Jenkins
+// Flujo: docker run (monta workspace) -> genera dist/ -> netlify deploy
+// ============================================================
+
 pipeline {
     agent any
 
@@ -7,42 +13,53 @@ pipeline {
     }
 
     stages {
-        stage('Clonar código') {
+        stage('Checkout') {
             steps {
-                echo '🌀 Clonando repositorio desde GitHub...'
+                echo '🌀 Clonando repositorio...'
                 checkout scm
             }
         }
 
-        stage('Construir imagen Docker') {
+        stage('Build with Docker (mounted volume)') {
             steps {
-                echo '🐳 Construyendo imagen Docker del proyecto Astro...'
-                sh 'docker build -t astro-app .'
-            }
-        }
-
-      stage('Debug Netlify vars') {
-            steps {
+                echo '🐳 Construyendo proyecto con Docker...'
                 script {
-                    echo "🔍 Comprobando variables de entorno..."
-                    sh '''
-                        echo "TOKEN (parcial): $(echo $NETLIFY_TOKEN | cut -c1-5)****"
-                        echo "SITE ID: $NETLIFY_SITE_ID"
-                    '''
+                    // Montar workspace como volumen, build se escribe directamente
+                    sh """
+                        docker run --rm \
+                            -v \$(pwd):/app \
+                            -w /app \
+                            node:20-alpine \
+                            sh -c 'yarn install --frozen-lockfile && yarn build'
+                    """
                 }
             }
         }
 
-        
-        stage('Desplegar en Netlify') {
-             steps {
+        stage('Verify dist') {
+            steps {
+                echo '🔍 Verificando que dist/ existe...'
                 sh '''
-                    echo "🚀 Iniciando despliegue en Netlify..."
-                    echo '[build]' > netlify.toml
-                    echo '  command = ""' >> netlify.toml
-                    echo '  publish = "dist"' >> netlify.toml
-                    sudo npm install -g netlify-cli || true
-                    npx netlify deploy --dir=dist --prod --auth=$NETLIFY_TOKEN --site=$NETLIFY_SITE_ID
+                    if [ -d "dist" ]; then
+                        echo "✅ Carpeta dist/ generada correctamente"
+                        ls -lah dist/
+                    else
+                        echo "❌ ERROR: dist/ no existe"
+                        exit 1
+                    fi
+                '''
+            }
+        }
+
+        stage('Deploy to Netlify') {
+            steps {
+                echo '🚀 Desplegando a Netlify...'
+                sh '''
+                    npx netlify-cli deploy \
+                        --prod \
+                        --dir=dist \
+                        --auth=$NETLIFY_TOKEN \
+                        --site=$NETLIFY_SITE_ID
                 '''
             }
         }
@@ -50,10 +67,14 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build y despliegue completados con éxito.'
+            echo '✅ ¡Despliegue exitoso en Netlify!'
         }
         failure {
-            echo '❌ Error durante el pipeline.'
+            echo '❌ Error durante el pipeline'
+        }
+        always {
+            echo '🧹 Limpiando archivos temporales...'
+            sh 'rm -rf node_modules dist .astro || true'
         }
     }
 }
