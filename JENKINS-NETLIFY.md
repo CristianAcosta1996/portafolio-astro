@@ -1,6 +1,6 @@
-# Jenkins + Netlify (Docker con Volumen)
+# Jenkins + Netlify (Dockerfile.netlify)
 
-Guía para desplegar un sitio Astro a Netlify usando Jenkins y Docker. El build se ejecuta en un contenedor que monta el workspace y escribe la carpeta `dist/` directamente en el filesystem del job.
+Guía para desplegar un sitio Astro a Netlify usando Jenkins y Docker. Todo el build y deploy ocurre dentro de un contenedor usando `Dockerfile.netlify`.
 
 ---
 
@@ -11,22 +11,40 @@ Archivo: `Jenkinsfile` (ya configurado en el repo).
 ### Flujo
 
 ```
-Checkout → Docker run (monta volumen) → Verify dist → Netlify deploy
-   ↓                ↓                       ↓             ↓
-  SCM      yarn install && build       ls dist/        npx netlify-cli
+Build image → Run container (build + deploy inside)
+     ↓                    ↓
+docker build      yarn build + netlify deploy
+(Dockerfile.netlify)    (todo dentro del contenedor)
 ```
 
 ### 🔧 Cómo funciona
 
+**Stage 1: Build image**
+
 ```bash
-docker run --rm \
-    -v $(pwd):/app \      # Monta workspace en /app
-    -w /app \             # Trabaja en /app
-    node:20-alpine \      # Imagen base
-    sh -c 'yarn install --frozen-lockfile && yarn build'
+docker build -f Dockerfile.netlify -t mi-portfolio:netlify .
 ```
 
-**Resultado:** `dist/` se crea directamente en el workspace de Jenkins, listo para el deploy.
+- Instala Yarn 1 y Netlify CLI
+- Ejecuta `yarn install --frozen-lockfile`
+- Ejecuta `yarn build` (genera dist/)
+- Todo queda en la imagen
+
+**Stage 2: Deploy to Netlify**
+
+```bash
+docker run --rm \
+    -e NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN \
+    -e NETLIFY_SITE_ID=$NETLIFY_SITE_ID \
+    mi-portfolio:netlify
+```
+
+- El contenedor arranca con el CMD del Dockerfile
+- Ejecuta `netlify deploy --prod --dir=dist`
+- Usa las credenciales que le pasó Jenkins
+- Termina y se elimina (--rm)
+
+**Resultado:** Todo ocurre dentro del contenedor. Sin writes en el host, sin problemas de permisos.
 
 ---
 
@@ -94,59 +112,56 @@ Jenkins automáticamente:
 ## 🧪 Testing local (antes de Jenkins)
 
 ```bash
-# Build con Docker (igual al pipeline)
+# Build de la imagen (igual que Jenkins)
+docker build -f Dockerfile.netlify -t mi-portfolio:netlify .
+
+# Deploy manual (con tus tokens locales)
 docker run --rm \
-    -v $(pwd):/app \
-    -w /app \
-    node:20-alpine \
-    sh -c 'yarn install --frozen-lockfile && yarn build'
-
-# Verificar que dist/ existe
-ls -lah dist/
-
-# Deploy manual a Netlify
-npx netlify-cli deploy --prod --dir=dist
+    -e NETLIFY_AUTH_TOKEN=tu-token-aqui \
+    -e NETLIFY_SITE_ID=tu-site-id-aqui \
+    mi-portfolio:netlify
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Error: "dist/ not found"
+### Error: "dist/ not found" dentro del contenedor
 
 ```bash
-# Verificar que yarn build genera dist/
-ls -lah dist/
+# Revisar que yarn build genera dist/
+docker run --rm mi-portfolio:netlify sh -lc 'ls -lah dist/'
 
 # Si no existe, revisar astro.config.mjs
 # Debe tener: output: 'static'
 ```
 
-### Error: "Permission denied" (Docker volume)
-
-```bash
-# Cambiar permisos después del build
-docker run --rm -v $(pwd):/app -w /app node:20-alpine \
-  sh -c 'yarn install --frozen-lockfile && yarn build && chmod -R 777 dist'
-```
-
 ### Error: "Netlify auth failed"
 
 ```bash
-# Verificar que el token es correcto
-echo $NETLIFY_TOKEN | cut -c1-10  # Debe mostrar primeros 10 chars
+# Verificar que las credenciales están en Jenkins
+# Dashboard → Credentials → Verificar NETLIFY_TOKEN y NETLIFY_SITE_ID
 
-# Regenerar token si es necesario en:
+# Regenerar token si es necesario:
 # https://app.netlify.com/user/applications
 ```
 
 ### Error: "Site not found"
 
 ```bash
-# Verificar Site ID
-echo $NETLIFY_SITE_ID
+# Verificar Site ID en Netlify:
+# Site settings → General → Site ID
+# Formato: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
 
-# Debe ser formato: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+### Error en el build de la imagen
+
+```bash
+# Ver logs completos del build
+docker build -f Dockerfile.netlify -t mi-portfolio:netlify . --progress=plain
+
+# Limpiar cache si es necesario
+docker build --no-cache -f Dockerfile.netlify -t mi-portfolio:netlify .
 ```
 
 ---
@@ -174,10 +189,18 @@ stage('Deploy Preview') {
         changeRequest()  // Solo en Pull Requests
     }
     steps {
-        sh 'npx netlify-cli deploy --dir=dist'  // Sin --prod = preview
+        sh """
+            docker run --rm \
+                -e NETLIFY_AUTH_TOKEN=$NETLIFY_TOKEN \
+                -e NETLIFY_SITE_ID=$NETLIFY_SITE_ID \
+                mi-portfolio:netlify \
+                sh -lc 'netlify deploy --dir=dist --auth=\"\$NETLIFY_AUTH_TOKEN\" --site=\"\$NETLIFY_SITE_ID\"'
+        """
     }
 }
 ```
+
+(sin `--prod` = deploy preview)
 
 ---
 
@@ -185,8 +208,9 @@ stage('Deploy Preview') {
 
 - [ ] Credenciales `NETLIFY_TOKEN` y `NETLIFY_SITE_ID` configuradas en Jenkins
 - [ ] Docker instalado en el agente Jenkins
-- [ ] `Jenkinsfile` actualizado con pipeline de volumen
-- [ ] Probado localmente con los comandos de testing
+- [ ] `Dockerfile.netlify` en el repo
+- [ ] `Jenkinsfile` actualizado
+- [ ] Probado localmente con docker build + docker run
 - [ ] Ejecutar build en Jenkins para verificar
 
 ---

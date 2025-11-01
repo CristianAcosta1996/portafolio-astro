@@ -1,12 +1,13 @@
 # Docker - Guía de uso
 
-Este proyecto incluye dos Dockerfiles para diferentes propósitos:
+Este proyecto incluye tres Dockerfiles para diferentes propósitos:
 
 ## 📦 Archivos Docker
 
-- **`Dockerfile`**: Producción (nginx)
+- **`Dockerfile`**: Producción (nginx) - Serve estático con nginx
 - **`Dockerfile.dev`**: Desarrollo (serve con hot reload)
-- **`docker-compose.yml`**: Orquestación simplificada
+- **`Dockerfile.netlify`**: CI/CD (build + deploy a Netlify en un solo contenedor)
+- **`docker-compose.yml`**: Orquestación simplificada para producción
 - **`nginx.conf`**: Configuración personalizada de nginx
 
 ---
@@ -68,6 +69,34 @@ docker-compose up -d --build
 
 ---
 
+## 🤖 Uso en CI/CD (Jenkins + Netlify)
+
+**Con Dockerfile.netlify:**
+
+Este Dockerfile se usa en el pipeline de Jenkins para build y deploy automático a Netlify.
+
+```bash
+# Build de la imagen (incluye yarn install + yarn build)
+docker build -f Dockerfile.netlify -t mi-portfolio:netlify .
+
+# Deploy a Netlify (requiere tokens)
+docker run --rm \
+    -e NETLIFY_AUTH_TOKEN=tu-token \
+    -e NETLIFY_SITE_ID=tu-site-id \
+    mi-portfolio:netlify
+```
+
+**Características:**
+
+- Build completo dentro del contenedor
+- Deploy automático a Netlify al arrancar
+- Sin problemas de permisos (nada se escribe en el host)
+- Usado en `Jenkinsfile` para CI/CD
+
+Ver más detalles en: [JENKINS-NETLIFY.md](./JENKINS-NETLIFY.md)
+
+---
+
 ## 🛠️ Uso en Desarrollo
 
 **Con Dockerfile.dev:**
@@ -81,6 +110,20 @@ Acceder en: http://localhost:3000
 
 ---
 
+## Comparación
+
+| Característica | Producción (nginx) | Desarrollo (serve) | CI/CD (Netlify)      |
+| -------------- | ------------------ | ------------------ | -------------------- |
+| Dockerfile     | `Dockerfile`       | `Dockerfile.dev`   | `Dockerfile.netlify` |
+| Servidor       | nginx              | serve (Node.js)    | Netlify CDN          |
+| Tamaño imagen  | ~25 MB             | ~180 MB            | ~250 MB              |
+| Performance    | ⚡ Muy rápida      | 🐢 Más lenta       | ⚡ CDN global        |
+| Uso memoria    | Bajo (~10 MB)      | Alto (~50 MB)      | N/A (efímero)        |
+| Puerto         | 80                 | 3000               | N/A                  |
+| Uso            | Deploy self-hosted | Testing local      | CI/CD pipeline       |
+
+---
+
 ## 🔧 Configuración nginx
 
 El archivo `nginx.conf` incluye:
@@ -90,19 +133,6 @@ El archivo `nginx.conf` incluye:
 - ✅ Manejo correcto de rutas de Astro
 - ✅ Página 404 personalizada
 - ✅ Security headers (X-Frame-Options, etc.)
-
----
-
-## 📊 Comparación
-
-| Característica | Producción (nginx) | Desarrollo (serve) |
-| -------------- | ------------------ | ------------------ |
-| Servidor       | nginx              | serve (Node.js)    |
-| Tamaño imagen  | ~25 MB             | ~180 MB            |
-| Performance    | ⚡ Muy rápida      | 🐢 Más lenta       |
-| Uso memoria    | Bajo (~10 MB)      | Alto (~50 MB)      |
-| Puerto         | 80                 | 3000               |
-| Uso            | Deploy real        | Testing local      |
 
 ---
 
