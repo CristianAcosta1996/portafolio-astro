@@ -38,7 +38,7 @@ pipeline {
              steps {
                 sh '''
                     echo "🚀 Iniciando despliegue en Netlify..."
-                    npm install -g netlify-cli
+                    sudo npm install -g netlify-cli || true
                     npx netlify deploy --dir=dist --prod --auth=$NETLIFY_TOKEN --site=$NETLIFY_SITE_ID
                 '''
             }
