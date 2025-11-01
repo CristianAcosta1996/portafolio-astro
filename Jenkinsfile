@@ -23,11 +23,13 @@ pipeline {
 
       stage('Debug Netlify vars') {
             steps {
-                sh '''
-                    echo "Comprobando variables de entorno..."
-                    echo "TOKEN (parcial): $(echo $NETLIFY_TOKEN | cut -c1-5)****"
-                    echo "SITE ID: $NETLIFY_SITE_ID"
-                '''
+                script {
+                    echo "🔍 Comprobando variables de entorno..."
+                    sh '''
+                        echo "TOKEN (parcial): $(echo $NETLIFY_TOKEN | cut -c1-5)****"
+                        echo "SITE ID: $NETLIFY_SITE_ID"
+                    '''
+                }
             }
         }
 
