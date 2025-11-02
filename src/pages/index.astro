@@ -2,6 +2,7 @@
 import { NavBar } from '../components';
 import HeroSection from '../layout/HeroSection.astro';
 import MainLayout from '../layout/MainLayout.astro';
+import AboutSection from '../layout/AboutSection.astro';
 import ProjectsSection from '../layout/ProjectsSection.astro';
 import Footer from '../layout/Footer.astro';
 
@@ -11,6 +12,7 @@ const pageTitle = 'Mi portafolio';
 
 <MainLayout pageTitle={pageTitle}>
 	<HeroSection/>
+	<AboutSection/>
 	<ProjectsSection projects={[
 		{alt: "projecto test", description: 'description project test', id: '1',image: 'https://picsum.photos/400/300',technologies: ['HTML', 'CSS', 'JavaScript'],title: 'Título del proyecto', demoUrl: 'https://example.com/demo', repoUrl: 'https://github.com/example/repo'},
 		{alt: "proyecto ecommerce", description: 'Tienda online completa con carrito de compras', id: '2',image: 'https://picsum.photos/400/301',technologies: ['React', 'Node.js', 'MongoDB'],title: 'E-commerce App', demoUrl: 'https://example.com/ecommerce', repoUrl: 'https://github.com/example/ecommerce'},

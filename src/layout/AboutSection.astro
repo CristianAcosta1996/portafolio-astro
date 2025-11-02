@@ -1,0 +1,203 @@
+---
+---
+
+<section id="sobre-mi" class="about-section">
+    <div class="container">
+        <h2 class="section-title">Sobre Mí 👨‍💻</h2>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <p class="intro-text">
+                    ¡Hola! Soy <strong>Cristian Acosta</strong>, un apasionado Ingeniero Informático y Desarrollador Full Stack 
+                    con experiencia en la creación de soluciones web modernas y escalables.
+                </p>
+                
+                <div class="skills-section">
+                    <h3 class="skills-title">Tecnologías y Herramientas 🛠️</h3>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h4>🎨 Frontend</h4>
+                            <ul>
+                                <li>React / Vue.js / Astro</li>
+                                <li>TypeScript / JavaScript</li>
+                                <li>HTML5 / CSS3 / Tailwind CSS</li>
+                            </ul>
+                        </div>
+                        <div class="skill-category">
+                            <h4>⚙️ Backend</h4>
+                            <ul>
+                                <li>Node.js / Express</li>
+                                <li>API RESTful</li>
+                                <li>PostgreSQL / MongoDB</li>
+                            </ul>
+                        </div>
+                        <div class="skill-category">
+                            <h4>🚀 DevOps & Tools</h4>
+                            <ul>
+                                <li>Git / GitHub</li>
+                                <li>Docker / Jenkins</li>
+                                <li>CI/CD / Netlify</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bio-text">
+                    <p>
+                        💡 Me especializo en transformar ideas en soluciones de software funcionales y elegantes. 
+                        Disfruto trabajando en proyectos desafiantes que me permiten aprender y crecer profesionalmente.
+                    </p>
+                    <p>
+                        📚 Cuando no estoy programando, me gusta mantenerme actualizado con las últimas tecnologías.
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .about-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #1f2937;
+        font-weight: 800;
+    }
+
+    .about-content {
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-text {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .intro-text {
+        font-size: 1.25rem;
+        line-height: 1.8;
+        color: #4b5563;
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
+
+    .intro-text strong {
+        color: #1d4ed8;
+        font-weight: 700;
+    }
+
+    .skills-section {
+        margin: 3rem 0;
+    }
+
+    .skills-title {
+        font-size: 1.75rem;
+        color: #1f2937;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .skill-category {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #1d4ed8;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .skill-category:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(29, 78, 216, 0.15);
+    }
+
+    .skill-category h4 {
+        font-size: 1.25rem;
+        color: #1d4ed8;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .skill-category ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .skill-category li {
+        padding: 0.5rem 0;
+        color: #4b5563;
+        font-size: 1rem;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .skill-category li::before {
+        content: "▹";
+        position: absolute;
+        left: 0;
+        color: #1d4ed8;
+        font-weight: bold;
+    }
+
+    .bio-text {
+        margin-top: 2.5rem;
+    }
+
+    .bio-text p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #4b5563;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .about-section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .about-content {
+            padding: 2rem 1.5rem;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+        }
+
+        .skills-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .bio-text p {
+            font-size: 1rem;
+        }
+    }
+</style>

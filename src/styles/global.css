@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+/* Smooth scroll para navegación entre secciones */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Offset para el navbar fijo */
+section[id] {
+  scroll-margin-top: 80px;
+}
