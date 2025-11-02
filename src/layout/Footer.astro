@@ -7,7 +7,10 @@ const currentYear = new Date().getFullYear();
         <div class="footer-content">
             <!-- Columna 1: Información personal -->
             <div class="footer-column">
-                <h3 class="footer-title">Cristian Acosta</h3>
+                <h3 class="footer-title">
+                    <img src="/logo-3.svg" alt="" aria-hidden="true" class="footer-logo" />
+                    Cristian Acosta
+                </h3>
                 <p class="footer-description">
                     Desarrollador Full Stack apasionado por crear soluciones web innovadoras y eficientes.
                 </p>
@@ -85,6 +88,17 @@ const currentYear = new Date().getFullYear();
         font-weight: 700;
         margin-bottom: 1rem;
         color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .footer-logo {
+        width: 3.5rem;
+        height: 3.5rem;
+        display: inline-block;
+        animation: footer-float 4.5s ease-in-out infinite;
+        will-change: transform;
+        transform-origin: center;
     }
 
     .footer-description {
@@ -171,6 +185,15 @@ const currentYear = new Date().getFullYear();
         }
         50% {
             transform: scale(1.1);
+        }
+    }
+
+    @keyframes footer-float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-6px);
         }
     }
 
