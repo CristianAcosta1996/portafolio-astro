@@ -3,7 +3,8 @@
 
 <section id="sobre-mi" class="about-section">
     <div class="container">
-        <h2 class="section-title">Sobre Mí 👨‍💻</h2>
+        <img src="/logo-3.svg" alt="Logo" class="about-logo" />
+        <h2 class="section-title">Sobre Mí</h2>
         
         <div class="about-content">
             <div class="about-text">
@@ -79,6 +80,26 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 2rem;
+    }
+
+    .about-logo {
+        display: block;
+        width: 10rem;
+        height: 10rem;
+        margin: 0 auto 1rem auto;
+        animation: flip 15s ease-in-out infinite;
+    }
+
+    @keyframes flip {
+        0%, 45% {
+            transform: rotateY(0deg);
+        }
+        50% {
+            transform: rotateY(180deg);
+        }
+        55%, 100% {
+            transform: rotateY(360deg);
+        }
     }
 
     .section-title {
