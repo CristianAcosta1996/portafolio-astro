@@ -1,0 +1,341 @@
+---
+---
+
+<section id="trayectoria" class="timeline-section">
+    <div class="container">
+        <div class="timeline-header">
+            <h2 class="section-title">Mi Trayectoria 📍</h2>
+            <p class="section-subtitle">
+                Un recorrido por mi experiencia profesional y formación académica
+            </p>
+        </div>
+
+        <div class="timeline">
+            <!-- Experiencia Laboral -->
+            <div class="timeline-item" data-category="work">
+                <div class="timeline-marker">
+                    <div class="marker-icon work-icon">💼</div>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2024 - Presente</span>
+                    <h3 class="timeline-title">Analista Informático</h3>
+                    <h4 class="timeline-company">SECIU - Universidad de la República</h4>
+                    <p class="timeline-description">
+                        Construcción de interfaces de usuario modernas. 
+                        Colaboración en equipo para desarrollo de sistemas universitarios.
+                    </p>
+                    <div class="timeline-tags">
+                        <span class="tag">Java</span>
+                        <span class="tag">Struts</span>
+                        <span class="tag">GlassFish</span>
+                        <span class="tag">MySQL</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Maven</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educación -->
+            <div class="timeline-item" data-category="education">
+                <div class="timeline-marker">
+                    <div class="marker-icon education-icon">🎓</div>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2017 - Presente</span>
+                    <h3 class="timeline-title">Tecnólogo en Informática</h3>
+                    <h4 class="timeline-company">Universidad de la República - Uruguay</h4>
+                    <p class="timeline-description">
+                        Formación sólida en fundamentos de programación, algoritmos,
+                        bases de datos, arquitectura de software y metodologías ágiles.
+                    </p>
+                    <div class="timeline-tags">
+                        <span class="tag">Algoritmos</span>
+                        <span class="tag">Arquitectura</span>
+                        <span class="tag">Bases de Datos</span>
+                        <span class="tag">Java</span>
+                        <span class="tag">C++</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aprendizaje Autodidacta -->
+            <div class="timeline-item" data-category="milestone">
+                <div class="timeline-marker">
+                    <div class="marker-icon milestone-icon">⭐</div>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">Aprendizaje Continuo</span>
+                    <h3 class="timeline-title">Desarrollo Web Moderno</h3>
+                    <h4 class="timeline-company">Estudio Autodidacta</h4>
+                    <p class="timeline-description">
+                        Aprendizaje constante de tecnologías web modernas y frameworks 
+                        del ecosistema JavaScript para desarrollo full stack.
+                    </p>
+                    <div class="timeline-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">NestJS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .timeline-section {
+        padding: 5rem 0;
+        background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .timeline-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Timeline */
+    .timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    /* Línea vertical central */
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 40px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #ec4899);
+        border-radius: 10px;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 100px;
+        margin-bottom: 3rem;
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+    .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+    .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+    .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+    .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+    .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .marker-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        position: relative;
+        z-index: 2;
+    }
+
+    .timeline-item:hover .marker-icon {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    .work-icon {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .education-icon {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .cert-icon {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .milestone-icon {
+        background: linear-gradient(135deg, #ec4899, #db2777);
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+
+    .timeline-item[data-category="work"] .timeline-content {
+        border-left-color: #3b82f6;
+    }
+
+    .timeline-item[data-category="education"] .timeline-content {
+        border-left-color: #8b5cf6;
+    }
+
+    .timeline-item[data-category="certification"] .timeline-content {
+        border-left-color: #f59e0b;
+    }
+
+    .timeline-item[data-category="milestone"] .timeline-content {
+        border-left-color: #ec4899;
+    }
+
+    .timeline-content:hover {
+        transform: translateX(10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .timeline-date {
+        display: inline-block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6b7280;
+        background: #f3f4f6;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-company {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #3b82f6;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-description {
+        color: #6b7280;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tag {
+        display: inline-block;
+        background: linear-gradient(135deg, #e0e7ff, #ddd6fe);
+        color: #5b21b6;
+        padding: 0.4rem 0.9rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+        background: linear-gradient(135deg, #c7d2fe, #ddd6fe);
+        transform: translateY(-2px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .timeline-section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+        }
+
+        .timeline::before {
+            left: 20px;
+        }
+
+        .timeline-item {
+            padding-left: 70px;
+        }
+
+        .timeline-marker {
+            width: 60px;
+            height: 60px;
+        }
+
+        .marker-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 1.4rem;
+        }
+
+        .timeline-content {
+            padding: 1.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.25rem;
+        }
+
+        .timeline-company {
+            font-size: 1rem;
+        }
+
+        .timeline-description {
+            font-size: 0.95rem;
+        }
+    }
+</style>
