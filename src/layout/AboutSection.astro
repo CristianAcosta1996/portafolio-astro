@@ -87,18 +87,27 @@
         width: 10rem;
         height: 10rem;
         margin: 0 auto 1rem auto;
-        animation: flip 15s ease-in-out infinite;
+        animation: flip 10s ease-in-out infinite;
     }
 
     @keyframes flip {
-        0%, 45% {
+        /* Idle a 0° */
+        0%, 30% {
             transform: rotateY(0deg);
         }
-        50% {
+        /* Primer flip (0° -> 180° -> 360°) */
+        35% {
             transform: rotateY(180deg);
         }
-        55%, 100% {
+        40%, 60% {
             transform: rotateY(360deg);
+        }
+        /* Segundo flip (360° -> 540° -> 720°) */
+        65% {
+            transform: rotateY(540deg);
+        }
+        70%, 100% {
+            transform: rotateY(720deg);
         }
     }
 
