@@ -13,6 +13,7 @@ export interface Props {
 }
 
 const { projects } = Astro.props;
+const projectsJson = JSON.stringify(projects);
 ---
 
 <section class="projects-section" aria-labelledby="projects-title">
@@ -21,59 +22,8 @@ const { projects } = Astro.props;
         <p class="section-description">Explora algunos de mis trabajos más destacados</p>
         
         <div class="carousel-container" role="region" aria-label="Carrusel de proyectos">
-            <div class="projects-carousel" id="projects-carousel">
-                {projects.map((project, index) => (
-                    <article 
-                        class="project-card" 
-                        data-project-index={index}
-                        itemscope 
-                        itemtype="https://schema.org/CreativeWork"
-                    >
-                        <div class="project-image">
-                            <img 
-                                src={project.image} 
-                                alt={project.alt}
-                                loading="lazy"
-                                itemprop="image"
-                            />
-                            <div class="project-overlay">
-                                <div class="project-links">
-                                    {project.demoUrl && (
-                                        <a 
-                                            href={project.demoUrl} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            aria-label={`Ver demo de ${project.title}`}
-                                        >
-                                            Ver Demo
-                                        </a>
-                                    )}
-                                    {project.repoUrl && (
-                                        <a 
-                                            href={project.repoUrl} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            aria-label={`Ver código de ${project.title}`}
-                                        >
-                                            Ver Código
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-content">
-                            <h3 class="project-title" itemprop="name">{project.title}</h3>
-                            <p class="project-description" itemprop="description">{project.description}</p>
-                            <div class="project-technologies">
-                                {project.technologies.map(tech => (
-                                    <span class="tech-tag" itemprop="keywords">{tech}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </article>
-                ))}
-            </div>
-            
+            <div class="projects-carousel" id="projects-carousel"></div>
+
             <button 
                 class="carousel-btn carousel-prev" 
                 id="prev-btn"
@@ -89,17 +39,244 @@ const { projects } = Astro.props;
                 <span>›</span>
             </button>
         </div>
-        
-        <div class="carousel-indicators" role="tablist" aria-label="Indicadores de proyectos">
-            {projects.map((_, index) => (
-                <button
-                    class={`indicator ${index === 0 ? 'active' : ''}`}
-                    data-slide={index}
-                    role="tab"
-                    aria-label={`Ir al proyecto ${index + 1}`}
-                ></button>
-            ))}
+
+                <div class="carousel-indicators" role="tablist" aria-label="Indicadores de proyectos">
+            <!-- Se poblará dinámicamente -->
         </div>
+
+        <!-- Datos serializados para el módulo del carrusel -->
+        <script type="application/json" id="projects-data" set:html={projectsJson}></script>
+
+        <!-- Lógica del carrusel -->
+        <script is:inline>
+            (function () {
+              function getProjectsData() {
+                const el = document.getElementById('projects-data');
+                console.log('Element found:', el);
+                if (!el) {
+                  console.error('projects-data element not found!');
+                  return [];
+                }
+                try {
+                  const data = JSON.parse(el.textContent || '[]');
+                  console.log('Projects data parsed:', data);
+                  return data;
+                } catch (e) {
+                  console.error('Error parsing projects data', e);
+                  return [];
+                }
+              }
+
+              function getPerPage() {
+                const width = window.innerWidth;
+                if (width >= 1024) return 6;
+                if (width >= 768) return 4;
+                return 2;
+              }
+
+              function renderCard(p) {
+                const techs = (p.technologies || []).map(t => `<span class="tech-tag" itemprop="keywords">${t}</span>`).join('');
+                const demo = p.demoUrl ? `<a href="${p.demoUrl}" target="_blank" rel="noopener noreferrer" aria-label="Ver demo de ${p.title}">Ver Demo</a>` : '';
+                const repo = p.repoUrl ? `<a href="${p.repoUrl}" target="_blank" rel="noopener noreferrer" aria-label="Ver código de ${p.title}">Ver Código</a>` : '';
+                return `
+                  <article class="project-card" itemscope itemtype="https://schema.org/CreativeWork">
+                    <div class="project-image">
+                      <img src="${p.image}" alt="${p.alt}" loading="lazy" itemprop="image" />
+                      <div class="project-overlay">
+                        <div class="project-links">${demo}${repo}</div>
+                      </div>
+                    </div>
+                    <div class="project-content">
+                      <h3 class="project-title" itemprop="name">${p.title}</h3>
+                      <p class="project-description" itemprop="description">${p.description}</p>
+                      <div class="project-technologies">${techs}</div>
+                    </div>
+                  </article>
+                `;
+              }
+
+              function debounce(fn, wait) {
+                let t;
+                return function(...args) {
+                  if (t) window.clearTimeout(t);
+                  t = window.setTimeout(() => fn(...args), wait);
+                };
+              }
+
+              class ProjectCarousel {
+                constructor(projects) {
+                  this.projects = projects || [];
+                  this.carousel = document.getElementById('projects-carousel');
+                  this.prevBtn = document.getElementById('prev-btn');
+                  this.nextBtn = document.getElementById('next-btn');
+                  this.indicatorsWrap = document.querySelector('.carousel-indicators');
+                  this.currentIndex = 0;
+                  this.totalSlides = 0;
+                  this.autoplayInterval = null;
+                  this.autoplayDelay = 5000; // 5 segundos
+                  this.handleResize = debounce(() => this.buildSlides(), 150);
+                  
+                  // Touch/Swipe variables
+                  this.touchStartX = 0;
+                  this.touchEndX = 0;
+                  this.touchStartY = 0;
+                  this.touchEndY = 0;
+                  this.minSwipeDistance = 50; // mínimo de píxeles para considerar un swipe
+                  
+                  this.init();
+                }
+
+                buildSlides() {
+                  const perPage = getPerPage();
+                  const groups = [];
+                  for (let i = 0; i < this.projects.length; i += perPage) {
+                    groups.push(this.projects.slice(i, i + perPage));
+                  }
+
+                  if (!this.carousel) {
+                    console.error('Carousel container not found!');
+                    return;
+                  }
+                  
+                  console.log('Building slides with', groups.length, 'groups');
+                  this.carousel.innerHTML = groups.map((group, slideIndex) => `
+                    <div class="carousel-slide" data-slide-index="${slideIndex}">
+                      <div class="slide-grid">
+                        ${group.map((p) => renderCard(p)).join('')}
+                      </div>
+                    </div>
+                  `).join('');
+
+                  this.totalSlides = groups.length;
+                  if (this.indicatorsWrap) {
+                    this.indicatorsWrap.innerHTML = groups.map((_, idx) => `
+                      <button class="indicator ${idx === 0 ? 'active' : ''}" data-slide="${idx}" role="tab" aria-label="Ir al grupo ${idx + 1}"></button>
+                    `).join('');
+                    const indicators = this.indicatorsWrap.querySelectorAll('.indicator');
+                    indicators.forEach((indicator, index) => {
+                      indicator.addEventListener('click', () => this.goToSlide(index));
+                    });
+                  }
+
+                  if (this.currentIndex >= this.totalSlides) this.currentIndex = 0;
+                  this.updateCarousel();
+                }
+
+                updateCarousel() {
+                  if (this.carousel) {
+                    const offset = -(this.currentIndex * 100);
+                    this.carousel.style.transform = `translateX(${offset}%)`;
+                  }
+                  if (this.indicatorsWrap) {
+                    const indicators = this.indicatorsWrap.querySelectorAll('.indicator');
+                    indicators.forEach((el, idx) => el.classList.toggle('active', idx === this.currentIndex));
+                  }
+                }
+
+                prevSlide() {
+                  this.currentIndex = this.currentIndex === 0 ? this.totalSlides - 1 : this.currentIndex - 1;
+                  this.updateCarousel();
+                  this.resetAutoplay();
+                }
+
+                nextSlide() {
+                  this.currentIndex = this.currentIndex === this.totalSlides - 1 ? 0 : this.currentIndex + 1;
+                  this.updateCarousel();
+                  this.resetAutoplay();
+                }
+
+                goToSlide(index) {
+                  this.currentIndex = index;
+                  this.updateCarousel();
+                  this.resetAutoplay();
+                }
+
+                startAutoplay() {
+                  this.stopAutoplay();
+                  this.autoplayInterval = setInterval(() => {
+                    this.nextSlide();
+                  }, this.autoplayDelay);
+                }
+
+                stopAutoplay() {
+                  if (this.autoplayInterval) {
+                    clearInterval(this.autoplayInterval);
+                    this.autoplayInterval = null;
+                  }
+                }
+
+                resetAutoplay() {
+                  this.stopAutoplay();
+                  this.startAutoplay();
+                }
+
+                handleTouchStart(e) {
+                  this.touchStartX = e.touches[0].clientX;
+                  this.touchStartY = e.touches[0].clientY;
+                  this.stopAutoplay();
+                }
+
+                handleTouchMove(e) {
+                  this.touchEndX = e.touches[0].clientX;
+                  this.touchEndY = e.touches[0].clientY;
+                }
+
+                handleTouchEnd() {
+                  const diffX = this.touchStartX - this.touchEndX;
+                  const diffY = this.touchStartY - this.touchEndY;
+                  
+                  // Solo hacer swipe si el movimiento horizontal es mayor que el vertical
+                  // (para no interferir con el scroll vertical)
+                  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > this.minSwipeDistance) {
+                    if (diffX > 0) {
+                      // Swipe hacia la izquierda -> siguiente
+                      this.nextSlide();
+                    } else {
+                      // Swipe hacia la derecha -> anterior
+                      this.prevSlide();
+                    }
+                  } else {
+                    // Si no hubo swipe, reanudar autoplay
+                    this.startAutoplay();
+                  }
+                  
+                  // Reset
+                  this.touchStartX = 0;
+                  this.touchEndX = 0;
+                  this.touchStartY = 0;
+                  this.touchEndY = 0;
+                }
+
+                init() {
+                  console.log('Initializing carousel with', this.projects.length, 'projects');
+                  this.prevBtn && this.prevBtn.addEventListener('click', () => this.prevSlide());
+                  this.nextBtn && this.nextBtn.addEventListener('click', () => this.nextSlide());
+                  window.addEventListener('resize', this.handleResize);
+                  
+                  // Pausar autoplay al hacer hover
+                  if (this.carousel) {
+                    this.carousel.addEventListener('mouseenter', () => this.stopAutoplay());
+                    this.carousel.addEventListener('mouseleave', () => this.startAutoplay());
+                    
+                    // Touch events para swipe en móviles
+                    this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+                    this.carousel.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+                    this.carousel.addEventListener('touchend', () => this.handleTouchEnd());
+                  }
+                  
+                  this.buildSlides();
+                  this.startAutoplay();
+                }
+              }
+
+              document.addEventListener('DOMContentLoaded', () => {
+                console.log('DOM loaded, initializing carousel...');
+                const data = getProjectsData();
+                new ProjectCarousel(data);
+              });
+            })();
+        </script>
+
     </div>
 </section>
 
@@ -133,41 +310,54 @@ const { projects } = Astro.props;
         position: relative;
         overflow: hidden;
         border-radius: 12px;
+        box-sizing: border-box;
     }
 
     .projects-carousel {
         display: flex;
-        transition: transform 0.3s ease;
+        transition: transform 0.4s ease;
+        will-change: transform;
+    }
+
+    /* Estilos globales para contenido generado dinámicamente */
+    :global(.carousel-slide) {
+        flex: 0 0 100%;
+        padding: 1rem 0;
+    }
+
+    :global(.slide-grid) {
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 2rem;
     }
 
-    .project-card {
-        flex: 0 0 100%;
+    :global(.project-card) {
         background: white;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
+        margin: 0 1rem;
     }
 
-    .project-card:hover {
+    :global(.project-card:hover) {
         transform: translateY(-5px);
     }
 
-    .project-image {
+    :global(.project-image) {
         position: relative;
         aspect-ratio: 16/10;
         overflow: hidden;
     }
 
-    .project-image img {
+    :global(.project-image img) {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
 
-    .project-overlay {
+    :global(.project-overlay) {
         position: absolute;
         top: 0;
         left: 0;
@@ -181,16 +371,16 @@ const { projects } = Astro.props;
         transition: opacity 0.3s ease;
     }
 
-    .project-card:hover .project-overlay {
+    :global(.project-card:hover .project-overlay) {
         opacity: 1;
     }
 
-    .project-links {
+    :global(.project-links) {
         display: flex;
         gap: 1rem;
     }
 
-    .project-links a {
+    :global(.project-links a) {
         padding: 0.5rem 1rem;
         background: var(--accent-color, #007bff);
         color: white;
@@ -199,33 +389,33 @@ const { projects } = Astro.props;
         transition: background 0.3s ease;
     }
 
-    .project-links a:hover {
+    :global(.project-links a:hover) {
         background: var(--accent-hover, #0056b3);
     }
 
-    .project-content {
+    :global(.project-content) {
         padding: 1.5rem;
     }
 
-    .project-title {
+    :global(.project-title) {
         font-size: 1.5rem;
         margin-bottom: 0.5rem;
         color: var(--text-color, #333);
     }
 
-    .project-description {
+    :global(.project-description) {
         color: var(--text-secondary, #666);
         margin-bottom: 1rem;
         line-height: 1.6;
     }
 
-    .project-technologies {
+    :global(.project-technologies) {
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
     }
 
-    .tech-tag {
+    :global(.tech-tag) {
         padding: 0.25rem 0.75rem;
         background: var(--tag-bg, #e9ecef);
         color: var(--tag-color, #495057);
@@ -237,7 +427,7 @@ const { projects } = Astro.props;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(29, 78, 216, 0.8); /* bg-blue-700 con 80% opacidad */
+        background: rgba(29, 78, 216, 0.8);
         color: white;
         border: none;
         width: 50px;
@@ -256,20 +446,15 @@ const { projects } = Astro.props;
         font-size: 2rem;
         line-height: 1;
         display: block;
-        margin-top: -6px; /* Ajuste fino para compensar el alineamiento visual */
+        margin-top: -6px;
     }
 
     .carousel-btn:hover {
-        background: rgba(29, 78, 216, 1); /* bg-blue-700 con 100% opacidad al hover */
+        background: rgba(29, 78, 216, 1);
     }
 
-    .carousel-prev {
-        left: 1rem;
-    }
-
-    .carousel-next {
-        right: 1rem;
-    }
+    .carousel-prev { left: 1rem; }
+    .carousel-next { right: 1rem; }
 
     .carousel-indicators {
         display: flex;
@@ -278,7 +463,7 @@ const { projects } = Astro.props;
         margin-top: 2rem;
     }
 
-    .indicator {
+    :global(.indicator) {
         width: 12px;
         height: 12px;
         border-radius: 50%;
@@ -288,91 +473,30 @@ const { projects } = Astro.props;
         transition: background 0.3s ease;
     }
 
-    .indicator.active {
-        background: var(--accent-color, #007bff);
+    :global(.indicator.active) { 
+        background: var(--accent-color, #007bff); 
     }
 
     @media (min-width: 768px) {
-        .project-card {
-            flex: 0 0 calc(50% - 1rem);
-        }
+        :global(.slide-grid) { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (min-width: 1024px) {
-        .project-card {
-            flex: 0 0 calc(33.333% - 1.33rem);
-        }
+        :global(.slide-grid) { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* Responsiveness para pantallas chicas */
+    @media (max-width: 640px) {
+        :global(.slide-grid) { gap: 1rem; }
+        :global(.project-card) { margin: 0 0.5rem; }
+        .carousel-btn { width: 40px; height: 40px; }
+        .carousel-btn span { font-size: 1.75rem; margin-top: -4px; }
+    }
+
+    @media (max-width: 360px) {
+        :global(.project-card) { margin: 0 0.25rem; }
+        .carousel-btn { width: 36px; height: 36px; }
+        .carousel-btn span { font-size: 1.5rem; margin-top: -2px; }
     }
 </style>
 
-<script>
-    class ProjectCarousel {
-        carousel: HTMLElement | null;
-        prevBtn: HTMLElement | null;
-        nextBtn: HTMLElement | null;
-        indicators: NodeListOf<Element>;
-        currentIndex: number;
-        totalSlides: number;
-
-        constructor() {
-            this.carousel = document.getElementById('projects-carousel');
-            this.prevBtn = document.getElementById('prev-btn');
-            this.nextBtn = document.getElementById('next-btn');
-            this.indicators = document.querySelectorAll('.indicator');
-            this.currentIndex = 0;
-            this.totalSlides = this.indicators.length;
-            
-            this.init();
-        }
-
-        init() {
-            this.prevBtn?.addEventListener('click', () => this.prevSlide());
-            this.nextBtn?.addEventListener('click', () => this.nextSlide());
-            
-            this.indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => this.goToSlide(index));
-            });
-
-            // Auto-play
-            this.startAutoPlay();
-        }
-
-        prevSlide() {
-            this.currentIndex = this.currentIndex === 0 ? this.totalSlides - 1 : this.currentIndex - 1;
-            this.updateCarousel();
-        }
-
-        nextSlide() {
-            this.currentIndex = this.currentIndex === this.totalSlides - 1 ? 0 : this.currentIndex + 1;
-            this.updateCarousel();
-        }
-
-        goToSlide(index: number) {
-            this.currentIndex = index;
-            this.updateCarousel();
-        }
-
-        updateCarousel() {
-            if (this.carousel) {
-                const cardWidth = (this.carousel.querySelector('.project-card') as HTMLElement)?.offsetWidth || 0;
-                const gap = 32; // 2rem gap
-                const offset = -(this.currentIndex * (cardWidth + gap));
-                this.carousel.style.transform = `translateX(${offset}px)`;
-            }
-
-            this.indicators.forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === this.currentIndex);
-            });
-        }
-
-        startAutoPlay() {
-            setInterval(() => {
-                this.nextSlide();
-            }, 5000);
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        new ProjectCarousel();
-    });
-</script>
