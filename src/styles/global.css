@@ -9,3 +9,14 @@ html {
 section[id] {
   scroll-margin-top: 80px;
 }
+
+/* Estilo global para títulos de sección */
+.section-title {
+  text-transform: uppercase;
+  transition: transform 0.3s ease;
+}
+
+/* Scale sutil cuando el mouse está sobre toda la sección */
+section:hover .section-title {
+  transform: scale(1.05) rotate(-1deg);
+}
