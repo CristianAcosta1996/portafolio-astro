@@ -1,0 +1,353 @@
+---
+---
+
+<section id="contacto" class="contact-section">
+    <div class="container">
+        <div class="contact-header">
+            <h2 class="section-title">¡Hablemos! 💬</h2>
+            <p class="section-subtitle">
+                ¿Tienes un proyecto en mente o simplemente quieres charlar? 
+                Me encantaría escucharte.
+            </p>
+        </div>
+
+        <div class="contact-content">
+            <!-- Tarjetas de contacto rápido -->
+            <div class="contact-cards">
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=cristiantecnologoinformatica@gmail.com&su=Consulta%20desde%20mi%20portafolio&body=Hola%20Cristian%2C%0A%0AMi%20nombre%20es%20%5BTu%20nombre%5D%20y%20me%20gustar%C3%ADa%20hablar%20sobre%3A%0A-%20Proyecto%3A%20%5BBreve%20descripci%C3%B3n%5D%0A-%20Objetivo%3A%20%5BQu%C3%A9%20quieres%20lograr%5D%0A-%20Presupuesto%20estimado%3A%20%5BOpcional%5D%0A-%20Plazo%3A%20%5BFecha%20objetivo%5D%0A%0ADetalles%3A%0A%5BCu%C3%A9ntame%20m%C3%A1s...%5D%0A%0AGracias%2C%0A%5BTu%20nombre%5D%0A%5BTu%20sitio%20%2F%20LinkedIn%5D" target="_blank" rel="noopener noreferrer" class="contact-card email-card">
+                    <div class="card-icon">📧</div>
+                    <h3>Email</h3>
+                    <p>cristiantecnologoinformatica@gmail.com</p>
+                    <span class="card-action">Enviar mensaje →</span>
+                </a>
+
+                <a href="https://www.linkedin.com/in/cristian-andres-acosta-techera/" target="_blank" rel="noopener noreferrer" class="contact-card linkedin-card">
+                    <div class="card-icon">💼</div>
+                    <h3>LinkedIn</h3>
+                    <p>Conectemos profesionalmente</p>
+                    <span class="card-action">Ver perfil →</span>
+                </a>
+
+                <a href="https://github.com/CristianAcosta1996" target="_blank" rel="noopener noreferrer" class="contact-card github-card">
+                    <div class="card-icon">🐙</div>
+                    <h3>GitHub</h3>
+                    <p>Revisa mis proyectos</p>
+                    <span class="card-action">Ver repositorios →</span>
+                </a>
+
+                <!-- WhatsApp oculto temporalmente hasta definir número público
+                <a href="https://wa.me/598XXXXXXXX" target="_blank" rel="noopener noreferrer" class="contact-card whatsapp-card">
+                    <div class="card-icon">💬</div>
+                    <h3>WhatsApp</h3>
+                    <p>Charlemos por mensaje</p>
+                    <span class="card-action">Enviar WhatsApp →</span>
+                </a>
+                -->
+            </div>
+
+            <!-- Formulario de contacto -->
+            <div class="contact-form-wrapper">
+                <div class="form-header">
+                    <h3>O envíame un mensaje directo ✉️</h3>
+                    <p>Respondo en menos de 24 horas</p>
+                </div>
+                
+                <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="contact" />
+                    <input type="hidden" name="bot-field" />
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                placeholder="Tu nombre"
+                                required 
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="tu@email.com"
+                                required 
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Asunto</label>
+                        <input 
+                            type="text" 
+                            id="subject" 
+                            name="subject" 
+                            placeholder="¿En qué puedo ayudarte?"
+                            required 
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Mensaje</label>
+                        <textarea 
+                            id="message" 
+                            name="message" 
+                            rows="5" 
+                            placeholder="Cuéntame sobre tu proyecto o idea..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span>Enviar mensaje</span>
+                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M17.5 2.5L8.75 11.25M17.5 2.5L12.5 17.5L8.75 11.25M17.5 2.5L2.5 7.5L8.75 11.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .contact-section {
+        padding: 5rem 0;
+        background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .contact-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .contact-content {
+        display: grid;
+        gap: 3rem;
+    }
+
+    /* Contact Cards */
+    .contact-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .contact-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .contact-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .contact-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
+        border-color: #3b82f6;
+    }
+
+    .card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-card p {
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-action {
+        color: #3b82f6;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Form */
+    .contact-form-wrapper {
+        background: white;
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .form-header h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.875rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .submit-btn:hover .btn-icon {
+        transform: translateX(4px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .contact-section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+        }
+
+        .contact-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-form-wrapper {
+            padding: 2rem 1.5rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

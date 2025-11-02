@@ -4,6 +4,7 @@ import HeroSection from '../layout/HeroSection.astro';
 import MainLayout from '../layout/MainLayout.astro';
 import AboutSection from '../layout/AboutSection.astro';
 import ProjectsSection from '../layout/ProjectsSection.astro';
+import ContactSection from '../layout/ContactSection.astro';
 import Footer from '../layout/Footer.astro';
 
 const myName = 'Cristian Andres Acosta Techera';
@@ -24,5 +25,6 @@ const pageTitle = 'Mi portafolio';
 		{alt: "juego web", description: 'Juego interactivo desarrollado en JavaScript', id: '8',image: 'https://picsum.photos/400/307',technologies: ['JavaScript', 'Canvas API', 'WebGL'],title: 'Web Game', demoUrl: 'https://example.com/game', repoUrl: 'https://github.com/example/game'},
 		{alt: "landing page", description: 'Página de aterrizaje responsive y moderna', id: '9',image: 'https://picsum.photos/400/308',technologies: ['HTML', 'SCSS', 'Vanilla JS'],title: 'Landing Page', demoUrl: 'https://example.com/landing', repoUrl: 'https://github.com/example/landing'}
 	]} />
+	<ContactSection />
 	<Footer />
 </MainLayout>
