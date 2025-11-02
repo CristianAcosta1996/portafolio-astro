@@ -306,24 +306,31 @@ const projectsJson = JSON.stringify(projects);
         font-size: 1.1rem;
     }
 
-    .carousel-container {
-        position: relative;
-        overflow: hidden;
-        border-radius: 12px;
-        box-sizing: border-box;
-    }
+  .carousel-container {
+    position: relative;
+    /* Volvemos a ocultar overflow para que el slide se vea limpio */
+    overflow: hidden;
+    border-radius: 12px;
+    box-sizing: border-box;
+    /* Creamos gutters laterales para alejar los botones del contenido */
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
-    .projects-carousel {
-        display: flex;
-        transition: transform 0.4s ease;
-        will-change: transform;
-    }
+  .projects-carousel {
+    display: flex;
+    transition: transform 0.4s ease;
+    will-change: transform;
+  }
 
     /* Estilos globales para contenido generado dinámicamente */
-    :global(.carousel-slide) {
-        flex: 0 0 100%;
-        padding: 1rem 0;
-    }
+  :global(.carousel-slide) {
+    flex: 0 0 100%;
+    /* Agregamos padding horizontal para separar visualmente entre slides durante la transición */
+    padding: 1rem 1.5rem;
+    /* Evita que sombras o contenido del slide vecino se filtren */
+    overflow: hidden;
+  }
 
     :global(.slide-grid) {
         display: grid;
@@ -331,13 +338,14 @@ const projectsJson = JSON.stringify(projects);
         gap: 2rem;
     }
 
-    :global(.project-card) {
+  :global(.project-card) {
         background: white;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
-        margin: 0 1rem;
+    /* Usamos el gap del grid y el padding del contenedor para el espaciado */
+    margin: 0;
     }
 
     :global(.project-card:hover) {
@@ -453,8 +461,8 @@ const projectsJson = JSON.stringify(projects);
         background: rgba(29, 78, 216, 1);
     }
 
-    .carousel-prev { left: 1rem; }
-    .carousel-next { right: 1rem; }
+  .carousel-prev { left: 0.25rem; }
+  .carousel-next { right: 0.25rem; }
 
     .carousel-indicators {
         display: flex;
@@ -479,10 +487,20 @@ const projectsJson = JSON.stringify(projects);
 
     @media (min-width: 768px) {
         :global(.slide-grid) { grid-template-columns: repeat(2, 1fr); }
+    /* Más espacio lateral para botones en tablets */
+    .carousel-container { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .carousel-prev { left: 0; }
+    .carousel-next { right: 0; }
+  :global(.carousel-slide) { padding: 1rem 1.75rem; }
     }
 
     @media (min-width: 1024px) {
         :global(.slide-grid) { grid-template-columns: repeat(3, 1fr); }
+    /* En desktop, ampliar gutters para que queden más "afuera" pero sin cortar el slide */
+    .carousel-container { padding-left: 2rem; padding-right: 2rem; }
+    .carousel-prev { left: 0; }
+    .carousel-next { right: 0; }
+  :global(.carousel-slide) { padding: 1rem 2rem; }
     }
 
     /* Responsiveness para pantallas chicas */
