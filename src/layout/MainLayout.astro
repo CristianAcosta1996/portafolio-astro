@@ -14,10 +14,11 @@ const {
 	pageTitle, 
 	showNav = true,
 	description = "Desarrollador Full Stack apasionado por crear soluciones web innovadoras. Explora mi portafolio de proyectos.",
-	ogImage = "/portfolio-preview.png" // Imagen de vista previa del portafolio
+	ogImage = "/logo-3.svg" // Imagen de vista previa para compartir (usa tu logo-3)
 } = Astro.props;
 
-const siteUrl = "https://tu-sitio.netlify.app"; // Cambia esto por tu URL de Netlify
+// IMPORTANTE: Reemplaza por tu dominio real en producción para previews correctas
+const siteUrl = "https://cristian-acosta-portafolio.netlify.app/";
 ---
 
 
@@ -41,8 +42,10 @@ const siteUrl = "https://tu-sitio.netlify.app"; // Cambia esto por tu URL de Net
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={`${siteUrl}${ogImage}`} />
+		<meta property="og:image:type" content="image/svg+xml" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="Logo de Cristian Acosta" />
 		
 		<!-- Twitter Card -->
 		<meta name="twitter:card" content="summary_large_image" />
@@ -50,6 +53,7 @@ const siteUrl = "https://tu-sitio.netlify.app"; // Cambia esto por tu URL de Net
 		<meta name="twitter:title" content={pageTitle} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
+		<meta name="twitter:image:alt" content="Logo de Cristian Acosta" />
 		
 		<!-- Canonical URL -->
 		<link rel="canonical" href={siteUrl} />
