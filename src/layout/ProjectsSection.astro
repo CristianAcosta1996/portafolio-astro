@@ -22,6 +22,12 @@ const projectsJson = JSON.stringify(projects);
         <p class="section-description">Explora algunos de mis trabajos más destacados</p>
         
         <div class="carousel-container" role="region" aria-label="Carrusel de proyectos">
+            <!-- Spinner de carga -->
+            <div class="projects-loading" id="projects-loading">
+                <div class="spinner"></div>
+                <p>Cargando proyectos...</p>
+            </div>
+            
             <div class="projects-carousel" id="projects-carousel"></div>
 
             <button 
@@ -342,6 +348,17 @@ const projectsJson = JSON.stringify(projects);
                   
                   this.buildSlides();
                   this.startAutoplay();
+                  
+                  // Ocultar spinner después de 2 segundos para que se vea la animación
+                  const loadingEl = document.getElementById('projects-loading');
+                  if (loadingEl) {
+                    setTimeout(() => {
+                      loadingEl.style.opacity = '0';
+                      setTimeout(() => {
+                        loadingEl.style.display = 'none';
+                      }, 300);
+                    }, 2000); // 2 segundos de carga visible
+                  }
                 }
               }
 
@@ -392,6 +409,51 @@ const projectsJson = JSON.stringify(projects);
     /* Creamos gutters laterales para alejar los botones del contenido */
     padding-left: 1rem;
     padding-right: 1rem;
+    min-height: 400px; /* altura mínima para el spinner */
+  }
+
+  /* Spinner de carga */
+  .projects-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e8eef5 100%);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+  }
+
+  .projects-loading p {
+    color: #1d4ed8;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(59, 130, 246, 0.15);
+    border-top-color: #3b82f6;
+    border-right-color: #1d4ed8;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .projects-carousel {
